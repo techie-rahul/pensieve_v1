@@ -1,0 +1,137 @@
+{
+  "metadata": {
+    "pipeline": "Sentence-BERT + UMAP + HDBSCAN Unsupervised Theme Discovery",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_dimension_raw": 384,
+    "normalized_embeddings": true,
+    "dataset": "go_emotions (raw text only)",
+    "split": "test",
+    "num_samples": 5427,
+    "timestamp_utc": "2026-09-08T20:17:22.000000+00:00"
+  },
+  "umap_configuration": {
+    "n_components": 5,
+    "n_neighbors": 15,
+    "min_dist": 0.0,
+    "metric": "cosine",
+    "random_state": 42
+  },
+  "hdbscan_configuration": {
+    "min_cluster_size": 25,
+    "min_samples": 5,
+    "metric": "euclidean",
+    "cluster_selection_method": "eom"
+  },
+  "diagnostics": {
+    "total_samples": 5427,
+    "num_clusters": 38,
+    "clustered_samples": 3635,
+    "clustered_percentage": 66.98,
+    "noise_samples": 1792,
+    "noise_percentage": 33.02,
+    "silhouette_score_umap_5d": 0.3501,
+    "davies_bouldin_index_umap_5d": 0.8285,
+    "calinski_harabasz_score_umap_5d": 738.56,
+    "silhouette_score_projected_384d": 0.0186,
+    "davies_bouldin_index_projected_384d": 4.0827,
+    "calinski_harabasz_score_projected_384d": 15.51,
+    "metrics_disclaimer": "These metrics evaluate geometric compactness and separation in embedding space. They do not measure semantic or psychological ground truth."
+  },
+  "baseline_comparison": {
+    "architecture": "Raw 384-d Sentence-BERT + HDBSCAN (MCS=10, MS=3)",
+    "num_clusters": 9,
+    "clustered_samples": 768,
+    "noise_samples": 4659,
+    "noise_percentage": 85.85,
+    "silhouette_score": 0.1052,
+    "davies_bouldin_index": 2.8062,
+    "calinski_harabasz_score": 17.12
+  },
+  "top_discovered_clusters": {
+    "10": {
+      "cluster_id": 10,
+      "size": 1066,
+      "percentage": 19.64,
+      "keywords": [
+        "name",
+        "love",
+        "don",
+        "see"
+      ],
+      "simple_theme_descriptor": "Personal Relationships / Mentions",
+      "representative_examples": [
+        "I love [NAME], but man I wish I knew what [NAME] would have been like here.",
+        "[NAME] can't hurt us anymore.",
+        "I honestly miss [NAME]"
+      ]
+    },
+    "34": {
+      "cluster_id": 34,
+      "size": 355,
+      "percentage": 6.54,
+      "keywords": [
+        "thank",
+        "thanks",
+        "good",
+        "love"
+      ],
+      "simple_theme_descriptor": "Gratitude / Polite Appreciation",
+      "representative_examples": [
+        "Thanks you!",
+        "Thank you :)",
+        "thank you !"
+      ]
+    },
+    "36": {
+      "cluster_id": 36,
+      "size": 185,
+      "percentage": 3.41,
+      "keywords": [
+        "thanks",
+        "said",
+        "don",
+        "know"
+      ],
+      "simple_theme_descriptor": "Conversational Misunderstandings / Dialogue",
+      "representative_examples": [
+        "I'm sorry that's what you read because it isn't what I said.",
+        "No offense taken, and I agree with your last statement.",
+        "Alright now you're intentionally misinterpreting what I say. Whatever."
+      ]
+    },
+    "25": {
+      "cluster_id": 25,
+      "size": 170,
+      "percentage": 3.13,
+      "keywords": [
+        "people",
+        "money",
+        "make",
+        "don"
+      ],
+      "simple_theme_descriptor": "Wealth / Money / Social Equity",
+      "representative_examples": [
+        "so basically free money for those wealthy enough to take vacations annually. wonderful.",
+        "You can't rightfully earn a billion dollars. Your employees can, and fifty thousand people in sweatshops can, but a single person cant",
+        "You could still pay them... Just saying."
+      ]
+    },
+    "22": {
+      "cluster_id": 22,
+      "size": 138,
+      "percentage": 2.54,
+      "keywords": [
+        "think",
+        "know",
+        "good",
+        "will"
+      ],
+      "simple_theme_descriptor": "Informal Reactions / Commentary",
+      "representative_examples": [
+        "thats why she is going crazy lmao",
+        "That's horrible, good to know she is with an awesome guy.",
+        "Oh hell no. Shes blind!!! No way in HELL is she ever being left alone with it."
+      ]
+    }
+  }
+}
