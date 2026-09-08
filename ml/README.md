@@ -219,3 +219,84 @@ This will:
 > ### 3. Extreme Class Imbalance
 > - Minority categories like `grief` (6 test samples) and `relief` (11 test samples) suffer from small sample variance.
 > - In downstream Pensieve phases, aggregating emotions into higher-level affective clusters (positive, negative, ambiguous) or combining with semantic embeddings can mitigate single-class sparsity.
+
+---
+
+## 10. Phase 2: Theme Discovery (Sentence-BERT + UMAP + HDBSCAN)
+
+Phase 2 implements an unsupervised theme discovery pipeline that translates user reflections into dense semantic embeddings, reduces high-dimensional distance concentration via UMAP manifold learning, and dynamically groups recurring topics using density-based HDBSCAN clustering.
+
+### 10.1 Final Pipeline Architecture
+$$\text{Journal Text} \longrightarrow \text{Sentence-BERT (all-MiniLM-L6-v2)} \longrightarrow \text{384-d Vector} \longrightarrow \text{UMAP (5-d)} \longrightarrow \text{HDBSCAN} \longrightarrow \text{Theme Cluster ID / Outlier (-1)}$$
+
+### 10.2 Final Configuration
+- **Embedding Model**: `sentence-transformers/all-MiniLM-L6-v2` (384-dimensional dense vectors, L2 normalized).
+- **UMAP Dimensionality Reduction**:
+  - `n_components`: `5`
+  - `n_neighbors`: `15`
+  - `min_dist`: `0.0`
+  - `metric`: `'cosine'`
+  - `random_state`: `42`
+- **HDBSCAN Clustering**:
+  - `min_cluster_size`: `25` (corpus) / `2` (small journal sets)
+  - `min_samples`: `5` (corpus) / `1` (small journal sets)
+  - `metric`: `'euclidean'`
+  - `cluster_selection_method`: `'eom'` (Excess of Mass)
+- **Outlier Preservation**: Unclustered/sparse entries strictly retain the `-1` noise label and are never forced into clusters.
+- **Centroid & Representative Identification**: For each discovered cluster, a normalized mean centroid $\mu_c$ is calculated in 384-d semantic space. Member entries are ranked by descending cosine similarity $\cos(x_i, \mu_c)$ to retrieve central representative entries.
+
+### 10.3 Quantitative Diagnostics on GoEmotions Corpus
+Evaluated on the official GoEmotions test split ($N = 5,427$ texts, strictly ignoring emotion labels):
+
+| Metric | Final Architecture (UMAP + HDBSCAN) | Raw Baseline (384-d + HDBSCAN) |
+| :--- | :---: | :---: |
+| **Discovered Clusters** | **38** | 9 |
+| **Clustered Samples** | **3,635 (66.98%)** | 768 (14.15%) |
+| **Noise Samples (-1)** | **1,792 (33.02%)** | 4,659 (85.85%) |
+| **Silhouette Score (5-d UMAP space)** | **0.3501** | N/A |
+| **Davies-Bouldin Index (5-d UMAP space)** | **0.8285** | N/A |
+| **Calinski-Harabasz Score (5-d UMAP space)**| **738.56** | N/A |
+| **Silhouette Score (projected 384-d)** | 0.0186 | 0.1052 |
+| **Davies-Bouldin (projected 384-d)** | 4.0827 | 2.8062 |
+| **Calinski-Harabasz (projected 384-d)** | 15.51 | 17.12 |
+
+*Diagnostic metrics evaluate mathematical compactness and cluster separation in embedding space, not semantic correctness.*
+
+### 10.4 Running Theme Discovery
+
+#### Python API
+```python
+from ml.theme import TextEmbedder, ThemeClusterer
+
+embedder = TextEmbedder()
+clusterer = ThemeClusterer(
+    min_cluster_size=2,
+    min_samples=1,
+    use_umap=True,
+    umap_components=5,
+    umap_neighbors=15,
+)
+
+texts = [
+    "Spent hours studying calculus in the library for the exam.",
+    "Submitted my thesis chapter; advisor gave encouraging feedback.",
+    "Sprint deadline at work; pushed the backend deployment patch.",
+    "Ran a 5k around the lake this morning and hit a new personal best.",
+]
+
+embeddings = embedder.embed_texts(texts)
+labels = clusterer.fit_predict(embeddings, texts=texts)
+summary = clusterer.get_cluster_summary(top_n_examples=1)
+```
+
+#### Run Qualitative Demo
+```bash
+python ml/theme_demo.py
+```
+
+#### Run Quantitative Evaluation
+```bash
+python ml/theme/evaluate.py --output ml/theme_evaluation_results.json
+```
+
+
