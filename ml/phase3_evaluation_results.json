@@ -1,0 +1,350 @@
+{
+  "metadata": {
+    "test_suite": "Phase 3 Synthetic Validation Suite",
+    "timestamp_utc": "2026-09-08T21:14:37.670005+00:00",
+    "overall_status": "PASS",
+    "tests_run": 7,
+    "tests_passed": 7
+  },
+  "test_results": {
+    "1_linguistic_feature_extraction": {
+      "status": "PASS",
+      "extracted": {
+        "word_count": 14,
+        "first_person_count": 3,
+        "questions": 1,
+        "exclamations": 1,
+        "negations": 2,
+        "vocabulary_diversity": 0.8571
+      }
+    },
+    "2_temporal_ordering": {
+      "status": "PASS",
+      "ordered_ids": [
+        "syn-01",
+        "syn-05",
+        "syn-08"
+      ]
+    },
+    "3_window_aggregation": {
+      "status": "PASS",
+      "num_windows": 4,
+      "total_entries": 8,
+      "window_entry_counts": [
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "4_emotion_trend_calculations": {
+      "status": "PASS",
+      "detected_increasing": [
+        "gratitude",
+        "joy"
+      ],
+      "detected_decreasing": [
+        "nervousness",
+        "annoyance"
+      ],
+      "sample_observation": "'annoyance' was more pronounced during earlier entries and appeared less frequently later (average score shifted from 0.80 to 0.03)."
+    },
+    "5_theme_frequency_calculations": {
+      "status": "PASS",
+      "recurring_clusters": [
+        0,
+        1
+      ],
+      "observations": [
+        "Theme Cluster 0 reappeared across multiple periods (2/4 windows), suggesting an ongoing area of reflection.",
+        "Theme Cluster 1 reappeared across multiple periods (2/4 windows), suggesting an ongoing area of reflection."
+      ]
+    },
+    "6_recurring_lexical_patterns": {
+      "status": "PASS",
+      "top_recurring_terms": [
+        "fix",
+        "code",
+        "today",
+        "morning",
+        "running"
+      ]
+    },
+    "7_minimum_data_safeguards": {
+      "status": "PASS",
+      "insufficient_data_status_caught": true,
+      "brevity_warning_caught": true
+    }
+  },
+  "master_synthesis_sample": {
+    "status": "success",
+    "entry_count": 8,
+    "time_span_days": 25.96,
+    "history_window_type": "weekly",
+    "num_windows": 4,
+    "safeguards": {
+      "sufficient_data": true,
+      "timespan_days": 25.96,
+      "start_time": "2026-01-02T10:00:00+00:00",
+      "end_time": "2026-01-28T09:00:00+00:00",
+      "brevity_warning": false,
+      "warning_message": null
+    },
+    "linguistic_trends": {
+      "status": "success",
+      "window_metrics": [
+        {
+          "window_index": 0,
+          "label": "Window 1 (2026-01-02 to 2026-01-09)",
+          "avg_words_per_entry": 15.0,
+          "avg_vocabulary_diversity": 0.971,
+          "avg_first_person_ratio": 0.068,
+          "avg_questions_per_entry": 0.5,
+          "avg_exclamations_per_entry": 0.5
+        },
+        {
+          "window_index": 1,
+          "label": "Window 2 (2026-01-09 to 2026-01-16)",
+          "avg_words_per_entry": 12.5,
+          "avg_vocabulary_diversity": 0.962,
+          "avg_first_person_ratio": 0.0,
+          "avg_questions_per_entry": 0.0,
+          "avg_exclamations_per_entry": 0.0
+        },
+        {
+          "window_index": 2,
+          "label": "Window 3 (2026-01-16 to 2026-01-23)",
+          "avg_words_per_entry": 15.5,
+          "avg_vocabulary_diversity": 0.905,
+          "avg_first_person_ratio": 0.0,
+          "avg_questions_per_entry": 0.0,
+          "avg_exclamations_per_entry": 0.5
+        },
+        {
+          "window_index": 3,
+          "label": "Window 4 (2026-01-23 to 2026-01-30)",
+          "avg_words_per_entry": 14.0,
+          "avg_vocabulary_diversity": 1.0,
+          "avg_first_person_ratio": 0.073,
+          "avg_questions_per_entry": 0.0,
+          "avg_exclamations_per_entry": 0.5
+        }
+      ],
+      "observations": [
+        "Writing length and stylistic features remained consistent over time."
+      ]
+    },
+    "emotion_trends": {
+      "status": "success",
+      "increasing_emotions": [
+        {
+          "emotion": "gratitude",
+          "first_window_avg": 0.065,
+          "last_window_avg": 0.87,
+          "delta": 0.805
+        },
+        {
+          "emotion": "joy",
+          "first_window_avg": 0.1,
+          "last_window_avg": 0.89,
+          "delta": 0.79
+        }
+      ],
+      "decreasing_emotions": [
+        {
+          "emotion": "annoyance",
+          "first_window_avg": 0.8,
+          "last_window_avg": 0.03,
+          "delta": -0.77
+        },
+        {
+          "emotion": "nervousness",
+          "first_window_avg": 0.7,
+          "last_window_avg": 0.045,
+          "delta": -0.655
+        }
+      ],
+      "stable_emotions": [],
+      "window_dominants": [
+        {
+          "window_index": 0,
+          "label": "Window 1 (2026-01-02 to 2026-01-09)",
+          "top_emotions": "annoyance (0.80), nervousness (0.70), joy (0.10)"
+        },
+        {
+          "window_index": 1,
+          "label": "Window 2 (2026-01-09 to 2026-01-16)",
+          "top_emotions": "joy (0.52), gratitude (0.46), annoyance (0.30)"
+        },
+        {
+          "window_index": 2,
+          "label": "Window 3 (2026-01-16 to 2026-01-23)",
+          "top_emotions": "joy (0.79), gratitude (0.75), nervousness (0.08)"
+        },
+        {
+          "window_index": 3,
+          "label": "Window 4 (2026-01-23 to 2026-01-30)",
+          "top_emotions": "joy (0.89), gratitude (0.87)"
+        }
+      ],
+      "observations": [
+        "'annoyance' was more pronounced during earlier entries and appeared less frequently later (average score shifted from 0.80 to 0.03).",
+        "'gratitude' appears to show an upward trend over time (average score moved from 0.07 to 0.87).",
+        "'joy' appears to show an upward trend over time (average score moved from 0.10 to 0.89).",
+        "'nervousness' was more pronounced during earlier entries and appeared less frequently later (average score shifted from 0.70 to 0.04)."
+      ]
+    },
+    "theme_trends": {
+      "status": "success",
+      "recurring_themes": [
+        {
+          "cluster_id": 0,
+          "total_entries": 3,
+          "present_in_windows": [
+            0,
+            1
+          ]
+        },
+        {
+          "cluster_id": 1,
+          "total_entries": 4,
+          "present_in_windows": [
+            2,
+            3
+          ]
+        }
+      ],
+      "emerging_themes": [],
+      "diminishing_themes": [],
+      "observations": [
+        "Theme Cluster 0 reappeared across multiple periods (2/4 windows), suggesting an ongoing area of reflection.",
+        "Theme Cluster 1 reappeared across multiple periods (2/4 windows), suggesting an ongoing area of reflection."
+      ]
+    },
+    "recurring_lexical_patterns": {
+      "recurring_words": [
+        {
+          "term": "fix",
+          "document_frequency": 2,
+          "total_count": 2,
+          "entry_percentage": 25.0
+        },
+        {
+          "term": "code",
+          "document_frequency": 2,
+          "total_count": 2,
+          "entry_percentage": 25.0
+        },
+        {
+          "term": "today",
+          "document_frequency": 2,
+          "total_count": 2,
+          "entry_percentage": 25.0
+        },
+        {
+          "term": "morning",
+          "document_frequency": 2,
+          "total_count": 2,
+          "entry_percentage": 25.0
+        },
+        {
+          "term": "running",
+          "document_frequency": 2,
+          "total_count": 2,
+          "entry_percentage": 25.0
+        }
+      ],
+      "recurring_phrases": [
+        {
+          "phrase": "morning running",
+          "document_frequency": 2
+        }
+      ],
+      "interpretation_note": "These content words and phrases appeared repeatedly across multiple entries, highlighting central recurring subjects in your reflections."
+    },
+    "theme_emotion_associations": {
+      "status": "success",
+      "associations": [
+        {
+          "cluster_id": 0,
+          "theme_name": "Work & Project Deadline",
+          "entry_count": 3,
+          "associated_emotions": [
+            {
+              "emotion": "annoyance",
+              "mean_probability": 0.667,
+              "baseline_mean": 0.299,
+              "relative_elevation": 0.368
+            },
+            {
+              "emotion": "nervousness",
+              "mean_probability": 0.583,
+              "baseline_mean": 0.272,
+              "relative_elevation": 0.311
+            },
+            {
+              "emotion": "joy",
+              "mean_probability": 0.227,
+              "baseline_mean": 0.574,
+              "relative_elevation": -0.347
+            }
+          ],
+          "summary": "Reflections categorized under 'Work & Project Deadline' were most frequently associated with annoyance (avg 0.67), nervousness (avg 0.58), joy (avg 0.23)."
+        },
+        {
+          "cluster_id": 1,
+          "theme_name": "Fitness & Morning Routine",
+          "entry_count": 4,
+          "associated_emotions": [
+            {
+              "emotion": "joy",
+              "mean_probability": 0.84,
+              "baseline_mean": 0.574,
+              "relative_elevation": 0.266
+            },
+            {
+              "emotion": "gratitude",
+              "mean_probability": 0.81,
+              "baseline_mean": 0.536,
+              "relative_elevation": 0.274
+            },
+            {
+              "emotion": "nervousness",
+              "mean_probability": 0.062,
+              "baseline_mean": 0.272,
+              "relative_elevation": -0.21
+            }
+          ],
+          "summary": "Reflections categorized under 'Fitness & Morning Routine' were most frequently associated with joy (avg 0.84), gratitude (avg 0.81), nervousness (avg 0.06)."
+        },
+        {
+          "cluster_id": 2,
+          "theme_name": "Evening Leisure",
+          "entry_count": 1,
+          "associated_emotions": [
+            {
+              "emotion": "joy",
+              "mean_probability": 0.55,
+              "baseline_mean": 0.574,
+              "relative_elevation": -0.024
+            },
+            {
+              "emotion": "gratitude",
+              "mean_probability": 0.5,
+              "baseline_mean": 0.536,
+              "relative_elevation": -0.036
+            },
+            {
+              "emotion": "annoyance",
+              "mean_probability": 0.2,
+              "baseline_mean": 0.299,
+              "relative_elevation": -0.099
+            }
+          ],
+          "summary": "Reflections categorized under 'Evening Leisure' were most frequently associated with joy (avg 0.55), gratitude (avg 0.50), annoyance (avg 0.20)."
+        }
+      ],
+      "disclaimer": "IMPORTANT: These associations reflect descriptive co-occurrence patterns in your writing. They do NOT establish causal relationships between topics and feelings."
+    }
+  }
+}
