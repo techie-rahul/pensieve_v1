@@ -299,4 +299,101 @@ python ml/theme_demo.py
 python ml/theme/evaluate.py --output ml/theme_evaluation_results.json
 ```
 
+---
+
+## 11. Phase 3: Linguistic & Longitudinal Pattern Analysis
+
+Phase 3 introduces a lightweight, descriptive analytical layer that tracks observable linguistic, affective, and thematic trajectories across a user's chronological journal history.
+
+> [!IMPORTANT]
+> ### Ethical Notice & Non-Diagnostic Purpose
+> - **Observational Only**: Phase 3 detects statistical shifts and stylistic tendencies in writing over time. It does **not** diagnose psychological conditions, evaluate mental disorders, predict mental health, or make causal claims.
+> - **Uncertainty-Aware Language**: All insights use non-definitive phrasing (*"appears more frequently"*, *"shows a gradual upward trend"*, *"may indicate a recurring pattern"*).
+> - **Descriptive Associations**: Relationships between themes and emotions represent co-occurrences in text, **not** psychological cause-and-effect.
+
+### 11.1 Pipeline Architecture
+$$\text{Dated Journal Entries} \longrightarrow \text{spaCy Linguistic Analysis} \longrightarrow \text{Chronological Aggregation} \longrightarrow \begin{cases} \text{Emotion Trends (Phase 1 Probabilities)} \\ \text{Theme Trends (Phase 2 Cluster IDs)} \\ \text{Linguistic Style Trajectories} \\ \text{Recurring Lexical Patterns} \\ \text{Theme-Emotion Associations} \end{cases}$$
+
+### 11.2 Interpretable Linguistic Features
+Extracted per entry using spaCy (`en_core_web_sm`):
+1. **Token Count**: Total tokens including punctuation.
+2. **Word Count**: Content and function words (excluding punctuation/whitespace).
+3. **Sentence Count**: Sentence boundary segmentation.
+4. **Average Sentence Length**: Words per sentence.
+5. **Vocabulary Diversity**: Type-Token Ratio (unique lemmas / total words).
+6. **Pronoun Usage**: Total pronoun count and pronoun-to-word ratio.
+7. **First-Person Pronoun Frequency**: Frequency of singular/plural first-person pronouns (`I`, `me`, `my`, `mine`, `myself`, `we`, `us`, `our`, `ours`, `ourselves`).
+8. **Question Count**: Inquisitive sentences ending in `?`.
+9. **Exclamation Count**: Exclamatory sentences containing `!`.
+10. **Negation Count**: Negation tokens (`no`, `not`, `n't`, `never`, `nobody`, `nowhere`, etc.).
+11. **Adjective & Adverb Frequency**: Modifiers and descriptive words.
+12. **Verb Frequency**: Action and auxiliary verbs.
+13. **POS Distribution**: Full coarse-grained Part-of-Speech breakdown.
+
+### 11.3 Longitudinal Analysis Modules
+
+#### 1. Time-Window Aggregation (`ml/longitudinal/aggregation.py`)
+- Sorts entries chronologically by ISO-8601 timestamps.
+- Aggregates entries into configurable windows (`weekly`, `monthly`, or custom days).
+- **Minimum-Data Safeguards**:
+  - Requires $\ge 3$ entries; returns `{"status": "insufficient_data"}` if fewer entries are provided.
+  - Flags histories spanning $< 7$ days with a brevity warning to avoid premature trend claims.
+
+#### 2. Emotion Trajectories (`ml/longitudinal/trends.py`)
+- Preserves continuous Phase 1 probabilities rather than binarizing into single labels.
+- Calculates mean probability per emotion across windows and flags meaningful shifts ($\Delta \ge 0.05$).
+
+#### 3. Theme Dynamics (`ml/longitudinal/trends.py`)
+- Tracks Phase 2 cluster frequencies over time, identifying recurring, emerging, and diminishing topics.
+
+#### 4. Recurring Lexical Patterns (`ml/longitudinal/patterns.py`)
+- Extracts content words and bigrams appearing across multiple entries, filtering English stopwords.
+
+#### 5. Theme-Emotion Associations (`ml/longitudinal/patterns.py`)
+- Computes conditional emotion distributions per theme cluster to identify descriptive co-occurrences.
+
+### 11.4 Running Phase 3
+
+#### Python API
+```python
+from ml.longitudinal import analyze_journal_history
+
+entries = [
+    {
+        "id": "e1",
+        "timestamp": "2026-01-02T10:00:00Z",
+        "text": "Stressed about project deadline and late night debugging.",
+        "emotions": {"annoyance": 0.72, "nervousness": 0.81, "joy": 0.05},
+        "theme_cluster": 0,
+    },
+    {
+        "id": "e2",
+        "timestamp": "2026-01-10T12:00:00Z",
+        "text": "Shipped the code patch! Feeling relieved and happy.",
+        "emotions": {"annoyance": 0.15, "nervousness": 0.10, "joy": 0.75},
+        "theme_cluster": 0,
+    },
+    {
+        "id": "e3",
+        "timestamp": "2026-01-18T08:00:00Z",
+        "text": "Morning 5k run around the lake. Energetic and grateful.",
+        "emotions": {"annoyance": 0.02, "nervousness": 0.04, "joy": 0.85},
+        "theme_cluster": 1,
+    },
+]
+
+report = analyze_journal_history(entries, window_type="weekly")
+```
+
+#### Run Qualitative Demo
+```bash
+python ml/phase3_demo.py
+```
+
+#### Run Synthetic Validation Suite
+```bash
+python ml/longitudinal/evaluate.py
+```
+
+
 
