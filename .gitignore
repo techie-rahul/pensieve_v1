@@ -22,3 +22,10 @@ build/
 .cache/
 .pytest_cache/
 scratch/
+
+# SQLite & databases
+*.db
+*.sqlite
+*.sqlite3
+pensieve.db
+test.db
