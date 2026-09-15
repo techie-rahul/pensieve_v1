@@ -573,5 +573,142 @@ python ml/rag/evaluate.py
 #### 4. Run Interactive Notebook
 Open and run `ml/notebooks/04_rag_grounding_demo.ipynb` in Jupyter or VS Code.
 
+---
+
+## 13. Phase 5: Grounded Reflection Generation
+
+Phase 5 converts structured emotional, thematic, linguistic, and longitudinal patterns from Phases 1–3, together with relevant concepts retrieved in Phase 4, into a concise, personalized reflective response.
+
+The generation layer does **not** train a new language model and does **not** use users' journal history as a training dataset. Safety and ethical constraints are strictly enforced **before** and **after** generation.
+
+The current retrieval knowledge base remains a **20-concept DEVELOPMENT / TEST set**; it is not the final 54-concept production knowledge base.
+
+```
+Structured Phase 1–4 Patterns
+            ↓
+Pre-Generation Policy Engine (ml/reflection/policy.py)
+  * Minimum entries safeguard (≥ 3 entries)
+  * Minimum timespan safeguard (≥ 7 days)
+  * Grounding availability check (retrieved concepts > 0)
+  * Rolling rate limit (≤ 2 reflections per 7 days)
+            ↓ [PASSED]
+Prompt Construction & Provider-Isolated Generation (ml/reflection/prompts.py, generator.py)
+  * Isolated LLMClient abstraction (OpenAIClient / MockLLMClient)
+  * Zero-credential guarantee (reads REFLECTION_API_KEY / OPENAI_API_KEY from environment)
+  * Structured JSON schema output
+  * Confidence score capped to ≤ 0.80
+            ↓
+Post-Generation Safety Validator (ml/reflection/validator.py)
+  * Schema & word count validation
+  * Concept grounding integrity (no unretrieved concepts/sources)
+  * Zero unretrieved outside theories (no attachment theory, ADHD, DSM disorders)
+  * Non-diagnostic language check (no clinical claims)
+  * Medical advice rejection (no medication/prescriptions)
+  * Uncertainty/hedging compliance ("may suggest", "could reflect", "resembles")
+  * Mandatory non-diagnostic disclaimer verification
+            ↓ [PASSED]
+Final Validated Grounded Reflection Result
+```
+
+> [!IMPORTANT]
+> ### Core Scope & Strict Non-Diagnostic Boundaries
+> - **Two-Stage Safety Architecture**: Safety rules are **never** left to the prompt alone. The Policy Engine runs before generation (preventing LLM calls on sparse data or excessive frequency), and the Safety Validator runs after generation (rejecting any diagnostic assertions, hallucinations, or medical claims).
+> - **Observational Only**: Reflections describe observable patterns and offer gentle open questions for personal contemplation. They do **not** diagnose, evaluate mental health, or make causal conclusions.
+> - **Confidence Capping**: Confidence scores reflect textual pattern clarity, capped at a maximum of **0.80**. They are never clinical probabilities.
+> - **Privacy-First**: Complete journal entries are **not** sent to the LLM. The generator operates exclusively on structured summary signals and retrieved concept definitions.
+
+---
+
+### 13.1 Reflection Input Contract
+
+Phase 5 defines `ReflectionInput` in `ml/reflection/generator.py`:
+
+```json
+{
+  "data_summary": {
+    "entry_count": 12,
+    "span_days": 28,
+    "num_windows": 4
+  },
+  "emotion_patterns": [
+    "Annoyance elevated during early weeks; joy and gratitude increasing later."
+  ],
+  "theme_patterns": [
+    "Work & Engineering (55% frequency)"
+  ],
+  "linguistic_patterns": {
+    "negation_ratio": 0.08,
+    "question_count": 2
+  },
+  "temporal_patterns": [
+    "Work-related theme recurring across 3 consecutive weekly windows"
+  ],
+  "recurring_patterns": [
+    "Frequent content word: 'deadline'"
+  ],
+  "retrieved_concepts": [
+    {
+      "concept_id": "stress_appraisal_framework",
+      "name": "Transactional Stress Appraisal",
+      "category": "cognitive_reflective",
+      "definition": "A psychological model positing that stress balances primary and secondary appraisal.",
+      "explanation": "Helps reflect on workload and coping capacity.",
+      "source": "Lazarus, R. S., & Folkman, S. (1984). Stress, Appraisal, and Coping.",
+      "cautions": ["Descriptive theoretical model; not a clinical burnout diagnosis."],
+      "similarity": 0.4606
+    }
+  ],
+  "past_reflection_timestamps": []
+}
+```
+
+#### Backend Pipeline Integration
+The helper method `ReflectionInput.from_pipeline_outputs()` seamlessly converts outputs from Phase 3 (`analyze_journal_history`) and Phase 4 (`retriever.retrieve`) without glue code:
+
+```python
+from ml.reflection import ReflectionInput, ReflectionGenerator
+
+reflection_input = ReflectionInput.from_pipeline_outputs(
+    history_analysis=phase3_report,
+    rag_result=phase4_retrieval,
+    past_reflection_timestamps=user_reflection_history,
+)
+generator = ReflectionGenerator()
+result = generator.generate_reflection(reflection_input)
+```
+
+---
+
+### 13.2 Evaluation Benchmark & Results
+
+Evaluated deterministically using `ml/reflection/evaluate.py` across 12 synthetic scenarios (results persisted in `ml/phase5_evaluation_results.json`):
+
+| Evaluation Metric | Measured Value | Meaning & Context |
+| :--- | :--- | :--- |
+| **Total Test Scenarios** | **12** | 5 valid pattern scenarios + 3 policy control cases + 4 validator control cases |
+| **Passed Cases** | **12 / 12** | 100% of scenarios produced the exact expected outcome |
+| **Overall Pass Rate** | **100.0%** | All policy blocks, generation cycles, and validator catches passed |
+| **Policy Rejection Accuracy** | **100.0%** | Insufficient entries (< 3), insufficient span (< 7d), and missing grounding caught |
+| **Validator Rejection Accuracy**| **100.0%** | Diagnostic claims, medical advice, missing disclaimers, and ungrounded concepts caught |
+| **Confidence Cap Enforced** | **True** | All outputs strictly $\le 0.80$ |
+| **Zero Hardcoded Secrets** | **True** | API keys managed via `REFLECTION_API_KEY` / `OPENAI_API_KEY` environment variables |
+
+---
+
+### 13.3 Running Phase 5
+
+#### 1. Run Qualitative Demonstration
+```bash
+python ml/phase5_demo.py
+```
+
+#### 2. Run Evaluation Benchmark
+```bash
+python ml/reflection/evaluate.py
+```
+
+#### 3. Run Interactive Notebook
+Open and execute `ml/notebooks/05_reflection_generation_demo.ipynb` in Jupyter or VS Code.
+
 
 
