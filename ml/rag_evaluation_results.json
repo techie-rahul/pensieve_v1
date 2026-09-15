@@ -1,0 +1,371 @@
+{
+  "benchmark_metadata": {
+    "name": "Pensieve Phase 4 Development Retrieval Benchmark",
+    "knowledge_base_size": 20,
+    "knowledge_base_type": "DEVELOPMENT / TEST dataset (20 concepts)",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "vector_index_type": "FAISS IndexFlatIP (exact cosine similarity)",
+    "scientific_disclaimer": "Algorithmic retrieval evaluation on a manually curated development set. Not a clinical trial, psychiatric validation, or medical effectiveness study."
+  },
+  "summary_metrics": {
+    "mrr": 1.0,
+    "ood_rejection_rate": 1.0,
+    "total_in_domain_queries": 10,
+    "total_ood_queries": 2,
+    "similarity_threshold_tested": 0.25,
+    "mean_hit@1": 1.0,
+    "mean_recall@1": 0.5833,
+    "mean_precision@1": 1.0,
+    "mean_hit@3": 1.0,
+    "mean_recall@3": 0.6833,
+    "mean_precision@3": 0.4,
+    "mean_hit@5": 1.0,
+    "mean_recall@5": 0.7167,
+    "mean_precision@5": 0.26
+  },
+  "in_domain_results": [
+    {
+      "query_id": "bench-01",
+      "scenario": "Work-related exhaustion and deadline frustration with perceived insurmountable demands",
+      "query": "work-related exhaustion and deadline frustration with perceived insurmountable demands and depleted resources",
+      "expected_concept_ids": [
+        "stress_appraisal_framework",
+        "stoic_dichotomy_of_control",
+        "decatastrophizing"
+      ],
+      "retrieved_concept_ids": [
+        "stress_appraisal_framework",
+        "broaden_and_build",
+        "impermanence_reflection",
+        "behavioral_activation",
+        "stoic_dichotomy_of_control"
+      ],
+      "retrieved_scores": [
+        0.4606,
+        0.325,
+        0.3007,
+        0.2897,
+        0.2824
+      ],
+      "reciprocal_rank": 1.0,
+      "recall@1": 0.3333,
+      "precision@1": 1.0,
+      "hit@1": 1.0,
+      "recall@3": 0.3333,
+      "precision@3": 0.3333,
+      "hit@3": 1.0,
+      "recall@5": 0.6667,
+      "precision@5": 0.4,
+      "hit@5": 1.0
+    },
+    {
+      "query_id": "bench-02",
+      "scenario": "Differentiating between what is and is not within personal control",
+      "query": "contemplating what is inside versus outside my direct control amidst organizational uncertainty",
+      "expected_concept_ids": [
+        "stoic_dichotomy_of_control",
+        "locus_of_control"
+      ],
+      "retrieved_concept_ids": [
+        "stoic_dichotomy_of_control",
+        "locus_of_control",
+        "stress_appraisal_framework",
+        "values_clarification",
+        "psychological_flexibility"
+      ],
+      "retrieved_scores": [
+        0.4813,
+        0.3886,
+        0.2928,
+        0.2925,
+        0.2699
+      ],
+      "reciprocal_rank": 1.0,
+      "recall@1": 0.5,
+      "precision@1": 1.0,
+      "hit@1": 1.0,
+      "recall@3": 1.0,
+      "precision@3": 0.6667,
+      "hit@3": 1.0,
+      "recall@5": 1.0,
+      "precision@5": 0.4,
+      "hit@5": 1.0
+    },
+    {
+      "query_id": "bench-03",
+      "scenario": "Harsh self-criticism and isolation after a perceived mistake",
+      "query": "berating myself harshly after making a minor mistake at work and feeling isolated in failure",
+      "expected_concept_ids": [
+        "self_compassion",
+        "cognitive_reframing"
+      ],
+      "retrieved_concept_ids": [
+        "self_compassion",
+        "negativity_bias",
+        "stoic_dichotomy_of_control",
+        "rumination_interruption",
+        "stress_appraisal_framework"
+      ],
+      "retrieved_scores": [
+        0.3533,
+        0.3038,
+        0.3021,
+        0.2834,
+        0.2821
+      ],
+      "reciprocal_rank": 1.0,
+      "recall@1": 0.5,
+      "precision@1": 1.0,
+      "hit@1": 1.0,
+      "recall@3": 0.5,
+      "precision@3": 0.3333,
+      "hit@3": 1.0,
+      "recall@5": 0.5,
+      "precision@5": 0.2,
+      "hit@5": 1.0
+    },
+    {
+      "query_id": "bench-04",
+      "scenario": "Catastrophic anticipation and spiraling what-if scenarios",
+      "query": "anticipatory dread and spiraling catastrophic thoughts about worst-case scenario outcomes",
+      "expected_concept_ids": [
+        "decatastrophizing",
+        "cognitive_reframing"
+      ],
+      "retrieved_concept_ids": [
+        "decatastrophizing",
+        "negativity_bias",
+        "dual_process_coping",
+        "rumination_interruption",
+        "overgeneralization_awareness"
+      ],
+      "retrieved_scores": [
+        0.4886,
+        0.4491,
+        0.423,
+        0.4053,
+        0.366
+      ],
+      "reciprocal_rank": 1.0,
+      "recall@1": 0.5,
+      "precision@1": 1.0,
+      "hit@1": 1.0,
+      "recall@3": 0.5,
+      "precision@3": 0.3333,
+      "hit@3": 1.0,
+      "recall@5": 0.5,
+      "precision@5": 0.2,
+      "hit@5": 1.0
+    },
+    {
+      "query_id": "bench-05",
+      "scenario": "Repetitive looping thoughts and unconstructive brooding over past regrets",
+      "query": "looping thoughts and repetitive unconstructive brooding over past conversations without finding solutions",
+      "expected_concept_ids": [
+        "rumination_interruption",
+        "cognitive_reframing"
+      ],
+      "retrieved_concept_ids": [
+        "rumination_interruption",
+        "decatastrophizing",
+        "dual_process_coping",
+        "psychological_flexibility",
+        "attentional_anchoring"
+      ],
+      "retrieved_scores": [
+        0.5602,
+        0.3861,
+        0.3798,
+        0.3787,
+        0.3594
+      ],
+      "reciprocal_rank": 1.0,
+      "recall@1": 0.5,
+      "precision@1": 1.0,
+      "hit@1": 1.0,
+      "recall@3": 0.5,
+      "precision@3": 0.3333,
+      "hit@3": 1.0,
+      "recall@5": 0.5,
+      "precision@5": 0.2,
+      "hit@5": 1.0
+    },
+    {
+      "query_id": "bench-06",
+      "scenario": "Vague emotional distress and difficulty articulating feelings",
+      "query": "feeling vague distress and having difficulty distinguishing whether I am feeling irritation fatigue or sadness",
+      "expected_concept_ids": [
+        "emotional_granularity"
+      ],
+      "retrieved_concept_ids": [
+        "emotional_granularity",
+        "dual_process_coping",
+        "broaden_and_build",
+        "stress_appraisal_framework",
+        "negativity_bias"
+      ],
+      "retrieved_scores": [
+        0.47,
+        0.3559,
+        0.352,
+        0.3463,
+        0.3048
+      ],
+      "reciprocal_rank": 1.0,
+      "recall@1": 1.0,
+      "precision@1": 1.0,
+      "hit@1": 1.0,
+      "recall@3": 1.0,
+      "precision@3": 0.3333,
+      "hit@3": 1.0,
+      "recall@5": 1.0,
+      "precision@5": 0.2,
+      "hit@5": 1.0
+    },
+    {
+      "query_id": "bench-07",
+      "scenario": "Inertia, loss of routine, and waiting for motivation before acting",
+      "query": "struggling with weekend inertia passivity and waiting for motivation to return before engaging in activities",
+      "expected_concept_ids": [
+        "behavioral_activation"
+      ],
+      "retrieved_concept_ids": [
+        "behavioral_activation",
+        "dual_process_coping",
+        "stoic_dichotomy_of_control"
+      ],
+      "retrieved_scores": [
+        0.4354,
+        0.2905,
+        0.2567
+      ],
+      "reciprocal_rank": 1.0,
+      "recall@1": 1.0,
+      "precision@1": 1.0,
+      "hit@1": 1.0,
+      "recall@3": 1.0,
+      "precision@3": 0.3333,
+      "hit@3": 1.0,
+      "recall@5": 1.0,
+      "precision@5": 0.2,
+      "hit@5": 1.0
+    },
+    {
+      "query_id": "bench-08",
+      "scenario": "Fear of incompetence when learning challenging new technical skills",
+      "query": "frustration when learning difficult skills and fear of looking incompetent or revealing fixed limitations",
+      "expected_concept_ids": [
+        "growth_mindset",
+        "cognitive_reframing"
+      ],
+      "retrieved_concept_ids": [
+        "growth_mindset",
+        "stoic_dichotomy_of_control",
+        "broaden_and_build",
+        "stress_appraisal_framework",
+        "dual_process_coping"
+      ],
+      "retrieved_scores": [
+        0.3525,
+        0.3319,
+        0.3165,
+        0.3069,
+        0.2916
+      ],
+      "reciprocal_rank": 1.0,
+      "recall@1": 0.5,
+      "precision@1": 1.0,
+      "hit@1": 1.0,
+      "recall@3": 0.5,
+      "precision@3": 0.3333,
+      "hit@3": 1.0,
+      "recall@5": 0.5,
+      "precision@5": 0.2,
+      "hit@5": 1.0
+    },
+    {
+      "query_id": "bench-09",
+      "scenario": "Pausing to prolong and deeply appreciate a peaceful morning routine",
+      "query": "slowing down to savor a peaceful morning walk and feeling genuine appreciation for supportive colleagues",
+      "expected_concept_ids": [
+        "savoring",
+        "gratitude_orientation"
+      ],
+      "retrieved_concept_ids": [
+        "gratitude_orientation",
+        "savoring",
+        "broaden_and_build",
+        "behavioral_activation",
+        "dual_process_coping"
+      ],
+      "retrieved_scores": [
+        0.4746,
+        0.3866,
+        0.3599,
+        0.3488,
+        0.3172
+      ],
+      "reciprocal_rank": 1.0,
+      "recall@1": 0.5,
+      "precision@1": 1.0,
+      "hit@1": 1.0,
+      "recall@3": 1.0,
+      "precision@3": 0.6667,
+      "hit@3": 1.0,
+      "recall@5": 1.0,
+      "precision@5": 0.4,
+      "hit@5": 1.0
+    },
+    {
+      "query_id": "bench-10",
+      "scenario": "Navigating waves of grief and loss while balancing daily responsibilities",
+      "query": "navigating emotional waves of grief and sadness while gradually re-engaging with daily work routines",
+      "expected_concept_ids": [
+        "dual_process_coping",
+        "self_compassion"
+      ],
+      "retrieved_concept_ids": [
+        "dual_process_coping",
+        "broaden_and_build",
+        "savoring",
+        "emotional_granularity",
+        "behavioral_activation"
+      ],
+      "retrieved_scores": [
+        0.6409,
+        0.4915,
+        0.4219,
+        0.418,
+        0.3745
+      ],
+      "reciprocal_rank": 1.0,
+      "recall@1": 0.5,
+      "precision@1": 1.0,
+      "hit@1": 1.0,
+      "recall@3": 0.5,
+      "precision@3": 0.3333,
+      "hit@3": 1.0,
+      "recall@5": 0.5,
+      "precision@5": 0.2,
+      "hit@5": 1.0
+    }
+  ],
+  "out_of_domain_results": [
+    {
+      "query_id": "bench-ood-01",
+      "scenario": "Mechanical vehicle repair instructions (out of domain)",
+      "query": "how to adjust carburetor idle mixture screws on a motorcycle engine",
+      "status": "no_relevant_concepts",
+      "retrieved_count": 0,
+      "correctly_rejected": true
+    },
+    {
+      "query_id": "bench-ood-02",
+      "scenario": "Theoretical high-energy particle physics (out of domain)",
+      "query": "quantum chromodynamics gluons quarks particle collision scattering matrix",
+      "status": "no_relevant_concepts",
+      "retrieved_count": 0,
+      "correctly_rejected": true
+    }
+  ]
+}
