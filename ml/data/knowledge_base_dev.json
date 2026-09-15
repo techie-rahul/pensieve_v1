@@ -1,0 +1,371 @@
+[
+  {
+    "id": "attentional_anchoring",
+    "name": "Attentional Anchoring",
+    "category": "behavioral_reflective",
+    "definition": "The practice of deliberately grounding attention in immediate sensory perceptions (such as breath, tactile contact, or ambient sound) to stabilize a racing or distracted mind.",
+    "explanation": "Serves as an immediate somatic and attentional reference point in journal reflections when mental chatter or agitation feels overwhelming.",
+    "related_patterns": [
+      "racing thoughts",
+      "feeling ungrounded or scattered",
+      "sensory overwhelm",
+      "difficulty settling into reflection"
+    ],
+    "cautions": [
+      "Contemplative and attentional practice; not a clinical treatment for sensory processing disorders or trauma flashbacks.",
+      "Can be practiced briefly without demanding formal meditation mastery."
+    ],
+    "source": "Kabat-Zinn, J. (1990). Full Catastrophe Living: Using the Wisdom of Your Body and Mind to Face Stress, Pain, and Illness. Delacorte."
+  },
+  {
+    "id": "behavioral_activation",
+    "name": "Behavioral Activation Framework",
+    "category": "behavioral_reflective",
+    "definition": "A therapeutic and reflective principle emphasizing that mood and energy follow intentional, valued activity and positive environmental reinforcement, rather than waiting for motivation to precede action.",
+    "explanation": "Helps reflect on patterns of withdrawal and inertia by exploring small, manageable actions aligned with personal values that can re-introduce vitality.",
+    "related_patterns": [
+      "lethargy and passivity",
+      "waiting for motivation before acting",
+      "withdrawing from hobbies and routines",
+      "weekend inertia",
+      "stagnation in routine"
+    ],
+    "cautions": [
+      "Behavioral principle; does not constitute structured behavioral activation therapy for clinical depression.",
+      "Small actions must be self-chosen, not imposed expectations."
+    ],
+    "source": "Martell, C. R., Dimidjian, S., & Herman-Dunn, R. (2010). Behavioral Activation for Depression: A Clinician's Guide. Guilford Press."
+  },
+  {
+    "id": "broaden_and_build",
+    "name": "Broaden-and-Build Theory",
+    "category": "affective_reflective",
+    "definition": "The model demonstrating that positive emotions broaden an individual's momentary thought-action repertoires (sparking creativity, exploration, and play) and gradually build enduring personal and social resources.",
+    "explanation": "Highlights how moments of joy, curiosity, or interest are not frivolous, but actively build psychological resilience and problem-solving capacity.",
+    "related_patterns": [
+      "creative bursts and playful exploration",
+      "strengthened social bonds",
+      "openness to new perspectives after feeling secure",
+      "recovering perspective after relief"
+    ],
+    "cautions": [
+      "Affective theory; not a mandate to experience positive emotion continuously.",
+      "Acknowledges the evolutionary necessity of negative emotions for survival."
+    ],
+    "source": "Fredrickson, B. L. (2001). The role of positive emotions in positive psychology. American Psychologist, 56(3), 218-226."
+  },
+  {
+    "id": "cognitive_reframing",
+    "name": "Cognitive Reframing",
+    "category": "cognitive_reflective",
+    "definition": "The practice of identifying automatic interpretive biases and consciously considering alternate, balanced perspectives on an event or situation.",
+    "explanation": "Helps a journaler reflect on rigid interpretations of distressing events, asking whether another reasonable interpretation exists that is grounded in evidence.",
+    "related_patterns": [
+      "black-and-white thinking",
+      "rigid assumptions about situations",
+      "interpretive distress",
+      "persistent self-doubt",
+      "assuming the worst outcome"
+    ],
+    "cautions": [
+      "Descriptive reflective technique; does not constitute psychotherapy or psychiatric treatment.",
+      "Reframing should not be equated with toxic positivity or invalidating authentic distress."
+    ],
+    "source": "Beck, A. T. (1979). Cognitive Therapy of Depression; Clark, D. A. (2014). Cognitive Restructuring."
+  },
+  {
+    "id": "decatastrophizing",
+    "name": "Decatastrophizing (What-If Analysis)",
+    "category": "cognitive_reflective",
+    "definition": "A structured reflection technique that examines anticipated worst-case scenarios, evaluating their objective likelihood and identifying realistic coping resources.",
+    "explanation": "Offers a grounding inquiry for journal entries dominated by catastrophic anticipation, asking: 'What is the most likely outcome, and how would I handle it if it occurred?'",
+    "related_patterns": [
+      "anticipatory dread",
+      "spiraling catastrophic thoughts",
+      "nervousness about upcoming deadlines",
+      "fear of severe failure",
+      "worst-case scenario fixation"
+    ],
+    "cautions": [
+      "Non-diagnostic self-reflection tool.",
+      "Not an intervention for acute panic disorder or severe generalized anxiety."
+    ],
+    "source": "Burns, D. D. (1980). Feeling Good: The New Mood Therapy; Beck, J. S. (2020). Cognitive Behavior Therapy: Basics and Beyond."
+  },
+  {
+    "id": "dual_process_coping",
+    "name": "Dual Process Model of Coping",
+    "category": "affective_reflective",
+    "definition": "A framework describing healthy adaptation to bereavement or significant life transition as an ongoing dynamic oscillation between loss-oriented coping and restoration-oriented coping.",
+    "explanation": "Validates the fluctuating nature of grief or major changes, showing that moving between painful remembering and engaging in daily life tasks is a natural, adaptive process.",
+    "related_patterns": [
+      "grief and emotional waves",
+      "navigating major life transitions",
+      "oscillating between sadness and daily routines",
+      "guilt over feeling happy during mourning"
+    ],
+    "cautions": [
+      "Descriptive coping framework; not a diagnostic assessment of prolonged grief disorder.",
+      "Grief timelines are deeply idiosyncratic and cannot be standardized."
+    ],
+    "source": "Stroebe, M., & Schut, H. (1999). The dual process model of coping with bereavement: Rationale and description. Death Studies, 23(3), 197-224."
+  },
+  {
+    "id": "emotional_granularity",
+    "name": "Emotional Granularity",
+    "category": "affective_reflective",
+    "definition": "The capacity to construct and differentiate between specific, nuanced emotional experiences (e.g., distinguishing irritation from fatigue or disappointment) rather than using broad, undifferentiated terms.",
+    "explanation": "Aids journalers in moving past generic labels like 'feeling bad' or 'stressed' to identify the precise affective nuance and its underlying need.",
+    "related_patterns": [
+      "vague feelings of distress",
+      "difficulty articulating specific emotions",
+      "lumping diverse feelings into 'bad'",
+      "emotional confusion",
+      "flattened affective descriptions"
+    ],
+    "cautions": [
+      "Affective science framework; not a diagnostic criterion for alexithymia.",
+      "Descriptive tool to enhance linguistic expression."
+    ],
+    "source": "Barrett, L. F. (2017). How Emotions Are Made: The Secret Life of the Brain. Houghton Mifflin Harcourt."
+  },
+  {
+    "id": "gratitude_orientation",
+    "name": "Gratitude Orientation",
+    "category": "affective_reflective",
+    "definition": "A habitual tendency to recognize and respond with positive emotional appreciation toward the benevolence of others, supportive conditions, and life's blessings.",
+    "explanation": "Encourages acknowledging supportive factors, relationships, and everyday privileges that often fade into the background during times of striving.",
+    "related_patterns": [
+      "appreciation for friends or colleagues",
+      "reflection on unexpected help",
+      "counterbalancing envy or entitlement",
+      "peaceful morning or evening reflections"
+    ],
+    "cautions": [
+      "Descriptive reflective attitude; not a prescription to invalidate genuine personal hardship.",
+      "Never used to guilt users into dismissing legitimate pain."
+    ],
+    "source": "Emmons, R. A., & McCullough, M. E. (2003). Counting blessings versus burdens. Journal of Personality and Social Psychology, 84(2), 377-389."
+  },
+  {
+    "id": "growth_mindset",
+    "name": "Growth Mindset",
+    "category": "cognitive_reflective",
+    "definition": "The understanding that intellectual abilities, creative talents, and personal skills can be developed through deliberate effort, effective strategies, and input from others.",
+    "explanation": "Encourages interpreting difficulties and errors not as indictments of innate capability, but as actionable feedback on the learning journey.",
+    "related_patterns": [
+      "fear of looking incompetent",
+      "giving up quickly when challenged",
+      "belief that talent is fixed",
+      "feeling threatened by others' success",
+      "learning frustration"
+    ],
+    "cautions": [
+      "Educational and motivational concept; not an assessment of neurocognitive capability.",
+      "Effort alone cannot overcome structural limitations without resources and guidance."
+    ],
+    "source": "Dweck, C. S. (2006). Mindset: The New Psychology of Success. Random House."
+  },
+  {
+    "id": "impermanence_reflection",
+    "name": "Reflection on Impermanence (Anicca)",
+    "category": "philosophical",
+    "definition": "The philosophical contemplation that all conditioned phenomena, including thoughts, physical sensations, emotional states, and material situations, are in continuous flux and fundamentally transient.",
+    "explanation": "Offers grounding reassurance during intense emotional pain that 'this too shall pass', while encouraging appreciation of current joyful moments before they shift.",
+    "related_patterns": [
+      "feeling stuck in an unbearable emotional state",
+      "fear of inevitable change",
+      "clinging to transient circumstances",
+      "existential reflection on time passing"
+    ],
+    "cautions": [
+      "Philosophical contemplation; not a clinical intervention for suicidal crisis.",
+      "Should foster gentle perspective rather than nihilistic detachment."
+    ],
+    "source": "Bodhi, B. (2000). The Connected Discourses of the Buddha; Hadot, P. (1995). Philosophy as a Way of Life."
+  },
+  {
+    "id": "locus_of_control",
+    "name": "Locus of Control",
+    "category": "psychological",
+    "definition": "A continuum reflecting the degree to which individuals believe that outcomes in their lives are contingent upon their own actions (internal) versus external forces, fate, or authority (external).",
+    "explanation": "Helps users reflect on patterns where they may feel either completely powerless to influence their environment or unrealistically responsible for events beyond their reach.",
+    "related_patterns": [
+      "feeling like a passive passenger in life",
+      "fatalism",
+      "attributing outcomes solely to bad luck",
+      "unreasonable burden of total responsibility"
+    ],
+    "cautions": [
+      "Psychological construct for personal exploration, not a diagnostic trait measure.",
+      "External systemic barriers are real and should not be minimized as merely 'external locus'."
+    ],
+    "source": "Rotter, J. B. (1966). Generalized expectancies for internal versus external control of reinforcement. Psychological Monographs: General and Applied, 80(1), 1-28."
+  },
+  {
+    "id": "negativity_bias",
+    "name": "Negativity Bias",
+    "category": "cognitive_reflective",
+    "definition": "The evolutionarily conserved psychological phenomenon where negative events, emotions, and information exert a greater psychological impact than neutral or positive ones of equal intensity.",
+    "explanation": "Provides perspective on why an entire day might feel ruined by a single critical remark despite nine positive interactions.",
+    "related_patterns": [
+      "disproportionate focus on criticism",
+      "discounting positive experiences",
+      "fixating on one mistake among successes",
+      "lingering on grievances"
+    ],
+    "cautions": [
+      "Evolutionary and cognitive concept; not proof of clinical depressive thinking.",
+      "Acknowledging negativity bias does not mean real problems should be ignored."
+    ],
+    "source": "Baumeister, R. F., Bratslavsky, E., Finkenauer, C., & Vohs, K. D. (2001). Bad is stronger than good. Review of General Psychology, 5(4), 323-370."
+  },
+  {
+    "id": "overgeneralization_awareness",
+    "name": "Overgeneralization Awareness",
+    "category": "cognitive_reflective",
+    "definition": "The recognition of a cognitive tendency to view a single negative event as a never-ending pattern of defeat, often signaled by words like 'always', 'never', or 'everyone'.",
+    "explanation": "Prompts the journaler to examine absolute language and evaluate whether a specific isolated setback is being generalized into a universal rule.",
+    "related_patterns": [
+      "using absolute words like 'always' or 'never'",
+      "treating one rejection as total unworthiness",
+      "generalizing a single bad day into a ruined life",
+      "all-or-nothing judgments"
+    ],
+    "cautions": [
+      "Cognitive heuristic awareness; not a clinical diagnostic conclusion.",
+      "Reflective inquiry should be gentle and non-judgmental."
+    ],
+    "source": "Beck, A. T. (1976). Cognitive Therapy and the Emotional Disorders; Burns, D. D. (1980). Feeling Good."
+  },
+  {
+    "id": "psychological_flexibility",
+    "name": "Psychological Flexibility",
+    "category": "cognitive_reflective",
+    "definition": "The ability to stay in contact with the present moment regardless of unpleasant thoughts or sensations, while consciously choosing behaviors aligned with deeply held personal values.",
+    "explanation": "Encourages accepting uncomfortable thoughts as passing mental events rather than struggling against them or letting them dictate behavior.",
+    "related_patterns": [
+      "experiential avoidance",
+      "struggling against difficult emotions",
+      "paralysis caused by anxious thoughts",
+      "rigidity in handling unexpected changes"
+    ],
+    "cautions": [
+      "Acceptance and Commitment framework concept; not a psychiatric evaluation.",
+      "Acceptance does not mean submitting to abusive or unsafe circumstances."
+    ],
+    "source": "Hayes, S. C., Strosahl, K. D., & Wilson, K. G. (1999). Acceptance and Commitment Therapy. Guilford Press."
+  },
+  {
+    "id": "rumination_interruption",
+    "name": "Rumination Interruption",
+    "category": "cognitive_reflective",
+    "definition": "The intentional redirection of attentional focus away from repetitive, unconstructive fixation on distress and its causes, toward problem-solving or restorative action.",
+    "explanation": "Helps distinguish reflective processing (which yields insight or solutions) from unproductive brooding that loops endlessly without resolution.",
+    "related_patterns": [
+      "looping thoughts about past mistakes",
+      "obsessive replay of conversations",
+      "brooding without constructive action",
+      "inability to disengage from regrets"
+    ],
+    "cautions": [
+      "Reflective distinction; not a diagnostic assessment of obsessive-compulsive or major depressive disorder.",
+      "Distraction should be constructive, not avoidant suppression of genuine grief."
+    ],
+    "source": "Nolen-Hoeksema, S., Wisco, B. E., & Lyubomirsky, S. (2008). Rethinking rumination. Perspectives on Psychological Science, 3(5), 400-424."
+  },
+  {
+    "id": "savoring",
+    "name": "Savoring",
+    "category": "affective_reflective",
+    "definition": "The conscious awareness of and deliberate engagement with positive feelings and experiences, extending their duration and psychological depth.",
+    "explanation": "Invites a journaler who notes moments of relief, joy, or beauty to pause and explore sensory details and appreciation rather than rushing past them.",
+    "related_patterns": [
+      "fleeting moments of joy or peace",
+      "rushing through accomplishments",
+      "inability to enjoy successes",
+      "taking pleasant moments for granted"
+    ],
+    "cautions": [
+      "Positive psychology framework; not a medical treatment for anhedonia.",
+      "Should be practiced naturally without forcing artificial cheerfulness."
+    ],
+    "source": "Bryant, F. B., & Veroff, J. (2007). Savoring: A New Model of Positive Experience. Lawrence Erlbaum Associates."
+  },
+  {
+    "id": "self_compassion",
+    "name": "Self-Compassion",
+    "category": "affective_reflective",
+    "definition": "A construct comprising self-kindness versus self-judgment, a sense of common humanity versus isolation, and balanced mindfulness versus over-identification with painful emotions.",
+    "explanation": "Serves as an antidote to harsh internal monologues following perceived mistakes, reminding the writer that setbacks and imperfection are universal human experiences.",
+    "related_patterns": [
+      "harsh self-criticism",
+      "feelings of inadequacy after mistakes",
+      "shame and isolation in failure",
+      "relentless perfectionism",
+      "berating oneself"
+    ],
+    "cautions": [
+      "Self-reflection concept; not a clinical substitute for self-harm or severe depression treatment.",
+      "Self-compassion is distinct from self-pity, complacency, or self-indulgence."
+    ],
+    "source": "Neff, K. D. (2003). Self-compassion: An alternative conceptualization of a healthy attitude toward oneself. Self and Identity, 2(2), 85-101."
+  },
+  {
+    "id": "stoic_dichotomy_of_control",
+    "name": "Dichotomy of Control",
+    "category": "philosophical",
+    "definition": "The philosophical principle that divides all events into things within one's direct agency (beliefs, actions, desires) and things outside it (external outcomes, other people's actions, unforeseen circumstances).",
+    "explanation": "Provides a reflective framework for examining whether ongoing frustration stems from attempting to exert control over external circumstances rather than focusing energy on one's own immediate responses.",
+    "related_patterns": [
+      "frustration over external constraints",
+      "feeling helpless about circumstances",
+      "repeated focus on uncontrollable outcomes",
+      "annoyance with others' decisions",
+      "workplace bureaucracy or delays"
+    ],
+    "cautions": [
+      "Descriptive philosophical framework; not a medical or psychological diagnosis.",
+      "Should not be used to encourage passive resignation in the face of genuinely addressable injustice or boundary violations."
+    ],
+    "source": "Epictetus, Enchiridion (c. 125 CE); Robertson, D. (2019). How to Think Like a Roman Emperor."
+  },
+  {
+    "id": "stress_appraisal_framework",
+    "name": "Transactional Stress Appraisal",
+    "category": "cognitive_reflective",
+    "definition": "A psychological model positing that stress is an evaluative process balancing primary appraisal (perceived threat/harm) and secondary appraisal (perceived coping resources and options).",
+    "explanation": "Enables reflection on whether feelings of being overwhelmed reflect an imbalance between perceived environmental demands and recognized personal or external resources.",
+    "related_patterns": [
+      "work-related exhaustion and frustration",
+      "feeling overwhelmed by competing demands",
+      "sense of resource depletion",
+      "perceived task impossibility",
+      "prolonged deadline pressure"
+    ],
+    "cautions": [
+      "Descriptive theoretical model of stress perception; not a clinical burnout diagnosis.",
+      "Does not replace organizational support or clinical assessment for clinical exhaustion."
+    ],
+    "source": "Lazarus, R. S., & Folkman, S. (1984). Stress, Appraisal, and Coping. Springer Publishing Company."
+  },
+  {
+    "id": "values_clarification",
+    "name": "Values Clarification",
+    "category": "philosophical",
+    "definition": "The deliberate process of identifying, articulating, and prioritizing core principles that imbue life with meaning and guide ethical, personal choices.",
+    "explanation": "Aids in distinguishing between socially imposed obligations and genuine intrinsic priorities, particularly when feeling lost or conflicted about direction.",
+    "related_patterns": [
+      "existential questioning",
+      "conflict between personal desires and external expectations",
+      "seeking meaning amidst routine",
+      "decision paralysis between options",
+      "feeling disconnected from purpose"
+    ],
+    "cautions": [
+      "Philosophical and humanistic inquiry; not a standardized personality profile.",
+      "Values are evolving directions, not rigid checklists of achievements."
+    ],
+    "source": "Frankl, V. E. (1959). Man's Search for Meaning; Dahl, J., et al. (2009). The Art & Science of Valuing in Psychotherapy."
+  }
+]

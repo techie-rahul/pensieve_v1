@@ -395,5 +395,183 @@ python ml/phase3_demo.py
 python ml/longitudinal/evaluate.py
 ```
 
+---
+
+## 12. Phase 4: RAG / Knowledge Grounding Retrieval Layer
+
+Phase 4 introduces a lightweight, privacy-first, modular **Retrieval-Augmented Generation (RAG)** retrieval layer for Pensieve.
+
+```
+Journal Entry
+    ↓
+Phase 1: RoBERTa + GoEmotions → Emotion signals
+    ↓
+Phase 2: Sentence-BERT + UMAP + HDBSCAN → Theme signals
+    ↓
+Phase 3: spaCy + Longitudinal Analysis → Linguistic & temporal patterns
+    ↓
+Phase 4: RAG / Knowledge Grounding → Relevant reflective concepts (No LLM)
+    ↓
+Future Phase 5: LLM Reflection Generation
+```
+
+> [!IMPORTANT]
+> ### Core Scope & Strict Non-Diagnostic Boundaries
+> - **Retrieval Only**: Phase 4 contains **NO LLM**, performs **NO text or reflection generation**, and issues **NO prompts to external models**. Text generation belongs strictly to Phase 5.
+> - **Descriptive Frameworks, Not Medical Diagnoses**: The knowledge base contains philosophical principles (e.g. Stoic Dichotomy of Control) and psychological self-reflection frameworks (e.g. Transactional Stress Appraisal, Cognitive Reframing). It contains **zero** clinical conclusions, diagnostic labels, psychiatric assessments, or treatment recommendations.
+> - **Descriptive Relevance**: A cosine similarity score indicates semantic resemblance between observed patterns and a reflective concept. It is never presented as proof that a user has a condition.
+> - **Ethical Phrasing**: All grounded outputs support non-definitive wording (*"This pattern may resemble the concept of X"*, *"X is one framework that may help interpret this pattern"*).
+> - **Privacy-First**: No raw journal entries are ever stored inside the knowledge base, and no user data is transmitted to external APIs or third parties.
+
+---
+
+### 12.1 Knowledge Base Schema & Development Dataset
+
+The knowledge base is structured as a collection of `ConceptDocument` instances:
+
+```json
+{
+  "id": "stoic_dichotomy_of_control",
+  "name": "Dichotomy of Control",
+  "category": "philosophical",
+  "definition": "The philosophical principle that divides all events into things within one's direct agency and things outside it.",
+  "explanation": "Provides a reflective framework for examining whether ongoing frustration stems from attempting to exert control over external circumstances...",
+  "related_patterns": [
+    "frustration over external constraints",
+    "repeated focus on uncontrollable outcomes"
+  ],
+  "cautions": [
+    "Descriptive philosophical framework; not a medical or psychological diagnosis.",
+    "Should not be used to encourage passive resignation in the face of addressable injustice."
+  ],
+  "source": "Epictetus, Enchiridion (c. 125 CE); Robertson, D. (2019)."
+}
+```
+
+> [!NOTE]
+> ### Development / Test Dataset Notice
+> The repository currently includes a curated **DEVELOPMENT / TEST dataset of 20 representative concepts** (`ml/data/knowledge_base_dev.json`) for pipeline testing, vector indexing verification, and retrieval benchmarking.
+> This is **NOT** the final 54-concept production set. The final 54-concept knowledge base is maintained separately and can be loaded seamlessly via `KnowledgeBase.load_from_json("path/to/54_concepts.json")` with zero code modifications.
+
+---
+
+### 12.2 Embedding Engine & Local Vector Index
+
+- **Embedding Model**: [`sentence-transformers/all-MiniLM-L6-v2`](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
+  - Directly reuses the Phase 2 Sentence-BERT configuration to eliminate redundant model dependencies.
+  - Generates 384-dimensional dense vectors with **L2 unit normalization** ($\|\mathbf{v}\|_2 = 1.0$).
+  - Information-dense document text representation combining concept name, category, definition, reflective explanation, and associated patterns.
+- **Vector Index**: Local **FAISS** [`IndexFlatIP`](https://github.com/facebookresearch/faiss)
+  - Computes exact Inner Product ($\langle \mathbf{u}, \mathbf{v} \rangle$), which is mathematically identical to Cosine Similarity for normalized vectors:
+    $$\text{sim}(\mathbf{q}, \mathbf{d}) = \mathbf{q} \cdot \mathbf{d} = \cos(\theta)$$
+  - Completely local and reproducible. No external vector database or PostgreSQL/pgvector dependency required.
+  - Includes a pure NumPy dot-product fallback if FAISS is ever unavailable in a deployment environment.
+  - No large binary indexes or model weight caches are tracked in version control.
+
+---
+
+### 12.3 Deterministic Query Construction (No LLM)
+
+Incoming structured signals from Phases 1–3 are mapped into an information-dense textual retrieval query through **`DeterministicQueryBuilder`**:
+
+$$\begin{aligned}
+\text{Inputs: } & \begin{cases}
+\text{Phase 1 Emotions} & (\text{e.g. } \text{annoyance}=0.74, \text{nervousness}=0.62) \\
+\text{Phase 2 Themes} & (\text{e.g. } \text{cluster 0: Work \& Engineering}) \\
+\text{Phase 3 Linguistics} & (\text{e.g. elevated negation, elevated questions}) \\
+\text{Phase 3 Longitudinal} & (\text{e.g. recurring work theme, increasing annoyance})
+\end{cases} \\
+\Downarrow & \quad (\textbf{Rule-Based Synthesis, Zero LLM}) \\
+\text{Query: } & \text{"Work-related theme recurring across 3 consecutive windows. Annoyance increased} \\
+& \text{significantly (+0.25). Focus on work \& engineering. Experiencing annoyance, nervousness."}
+\end{aligned}$$
+
+Every built query returns a structured **`query_audit`** trail detailing the exact signals, thresholds, and rules that generated the query.
+
+---
+
+### 12.4 Top-K Retrieval & Similarity Threshold Gating
+
+Retrieval is handled by `ConceptRetriever.retrieve()`:
+- **Top-$K$ Selection**: Configurable (default $K=3$).
+- **Relevance Threshold**: Configurable minimum similarity cutoff (default $t = 0.25$).
+- **Abstention on Out-of-Domain Queries**: If no concept reaches the threshold, the retriever returns:
+  ```json
+  {
+    "status": "no_relevant_concepts",
+    "query": "...",
+    "threshold_applied": 0.25,
+    "results": [],
+    "message": "No concept in the knowledge base met the minimum similarity threshold..."
+  }
+  ```
+- **Metadata Preservation**: Every returned concept preserves its `concept_id`, `name`, `category`, `definition`, `explanation`, `similarity_score`, `source`, and `cautions`.
+
+---
+
+### 12.5 Retrieval Evaluation & Benchmark Results
+
+Retrieval performance was evaluated using `ml/rag/evaluate.py` across a manually curated benchmark (`RETRIEVAL_BENCHMARK`) consisting of 10 representative in-domain reflection scenarios and 2 out-of-domain negative controls.
+
+> [!NOTE]
+> ### Evaluation Methodology Disclaimer
+> This benchmark measures algorithmic information retrieval metrics (ranking quality and similarity threshold gating) against a manually curated development benchmark. It is **not** a clinical trial or psychiatric validation study.
+
+#### Summary Metrics (`ml/rag_evaluation_results.json`)
+
+| Metric | Measured Value | Notes |
+| :--- | :--- | :--- |
+| **Mean Reciprocal Rank (MRR)** | **1.0000** | Ground-truth relevant concept retrieved at rank 1 for all in-domain queries |
+| **Hit@1** | **1.0000** | 100% of queries have a relevant concept in top-1 |
+| **Hit@3** | **1.0000** | 100% of queries have a relevant concept in top-3 |
+| **Hit@5** | **1.0000** | 100% of queries have a relevant concept in top-5 |
+| **Recall@1** | **0.5833** | Captures primary relevant concept at top-1 |
+| **Recall@3** | **0.6833** | Captures multi-concept ground truth at top-3 |
+| **Recall@5** | **0.7167** | Extended recall across top-5 |
+| **Precision@1** | **1.0000** | 100% precision for rank 1 |
+| **Precision@3** | **0.4000** | Reflects multi-concept evaluation targets ($1\text{–}3$ targets per query) |
+| **Precision@5** | **0.2600** | Precision with $K=5$ on small target sets |
+| **Out-of-Domain Rejection Rate** | **100.0%** | Both off-topic queries correctly yielded `no_relevant_concepts` |
+
+---
+
+### 12.6 Running Phase 4
+
+#### 1. Python API
+
+```python
+from ml.rag import KnowledgeBase, ConceptRetriever, PatternSignal
+
+# Load development knowledge base
+kb = KnowledgeBase.load_development_dataset()
+retriever = ConceptRetriever(kb, default_top_k=3, default_threshold=0.25)
+
+# Provide structured signals from Phases 1–3
+signals = PatternSignal(
+    emotions={"annoyance": 0.74, "nervousness": 0.62},
+    themes=[{"cluster_id": 0, "name": "Work & Engineering"}],
+    longitudinal_patterns=["Work-related theme recurring", "Annoyance increasing"],
+)
+
+# Retrieve grounded concepts
+response = retriever.retrieve(signals)
+print(response["status"])
+for concept in response["results"]:
+    print(f"- {concept['name']} (Score: {concept['similarity_score']}): {concept['definition']}")
+```
+
+#### 2. Run Qualitative Demonstration
+```bash
+python ml/rag_demo.py
+```
+
+#### 3. Run Retrieval Benchmark Evaluation
+```bash
+python ml/rag/evaluate.py
+```
+
+#### 4. Run Interactive Notebook
+Open and run `ml/notebooks/04_rag_grounding_demo.ipynb` in Jupyter or VS Code.
+
 
 
