@@ -1,6 +1,7 @@
 """Analysis and longitudinal patterns API endpoints."""
 
-from fastapi import APIRouter, Depends, HTTPException, status
+import logging
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from app.auth.dependencies import get_current_user
@@ -10,6 +11,8 @@ from app.models.user import User
 from app.schemas.entry import AnalysisResponse
 from app.schemas.patterns import PatternsResponse
 from app.services.ml_service import MLService, get_ml_service
+
+logger = logging.getLogger("pensieve.analysis")
 
 router = APIRouter(tags=["ML Analysis & Patterns"])
 
@@ -66,6 +69,7 @@ def analyze_entry(
         analysis.theme_cluster_id = analysis_data["theme_cluster_id"]
         analysis.linguistic_features = analysis_data["linguistic_features"]
 
+    entry.is_draft = False
     db.commit()
     db.refresh(analysis)
     return analysis
@@ -77,11 +81,13 @@ def analyze_entry(
     summary="Compute longitudinal patterns across user's chronological entries",
 )
 def get_patterns(
+    response: Response,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
     ml_service: MLService = Depends(get_ml_service),
 ) -> PatternsResponse:
     """Aggregate chronological journal history to detect emotion shifts, theme trajectories, and recurring lexical patterns."""
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     # Retrieve non-draft entries for current user in chronological order
     entries = (
         db.query(JournalEntry)
@@ -97,12 +103,23 @@ def get_patterns(
             message="No published journal entries found. At least 3 entries spanning 7+ days are required for longitudinal analysis.",
         )
 
+    entry_ids = [e.id for e in entries]
+    earliest = entries[0].created_at if entries else None
+    latest = entries[-1].created_at if entries else None
+    logger.info(
+        f"compute_longitudinal_patterns called: user_id={current_user.id}, "
+        f"count={len(entries)}, entry_ids={entry_ids}, earliest={earliest}, latest={latest}"
+    )
+
     report = ml_service.compute_longitudinal_patterns(entries)
+    time_span_days = report.get("time_span_days")
+    if time_span_days is None and report.get("safeguards"):
+        time_span_days = report.get("safeguards", {}).get("timespan_days")
 
     return PatternsResponse(
         status=report.get("status", "unknown"),
         entry_count=report.get("entry_count", len(entries)),
-        time_span_days=report.get("time_span_days"),
+        time_span_days=time_span_days,
         history_window_type=report.get("history_window_type"),
         num_windows=report.get("num_windows"),
         safeguards=report.get("safeguards"),

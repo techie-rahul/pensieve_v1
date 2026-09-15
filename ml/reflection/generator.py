@@ -187,46 +187,26 @@ class MockLLMClient(LLMClient):
         if self.canned_response is not None:
             return json.dumps(self.canned_response)
 
-        # Generate a dynamically grounded, compliant mock response matching prompt concepts
-        # Find concepts listed in the user prompt
+        # Dynamically extract all retrieved concepts from user_prompt
+        import re
         grounded_concepts: List[Dict[str, str]] = []
-        if "Concept ID: stress_appraisal_framework" in user_prompt:
+        concept_matches = re.findall(
+            r"Concept ID:\s*([^\n]+)\s*\nName:\s*([^\n(]+)(?:\s*\([^)]*\))?\s*\n(?:[^\n]*\n)*?Source Citation:\s*([^\n]+)",
+            user_prompt,
+        )
+        for cid, name, src in concept_matches:
             grounded_concepts.append({
-                "concept_id": "stress_appraisal_framework",
-                "name": "Transactional Stress Appraisal",
-                "source": "Lazarus, R. S., & Folkman, S. (1984). Stress, Appraisal, and Coping. Springer Publishing Company."
-            })
-        if "Concept ID: stoic_dichotomy_of_control" in user_prompt:
-            grounded_concepts.append({
-                "concept_id": "stoic_dichotomy_of_control",
-                "name": "Dichotomy of Control",
-                "source": "Epictetus, Enchiridion (c. 125 CE); Robertson, D. (2019). How to Think Like a Roman Emperor."
-            })
-        if "Concept ID: self_compassion" in user_prompt:
-            grounded_concepts.append({
-                "concept_id": "self_compassion",
-                "name": "Self-Compassion",
-                "source": "Neff, K. D. (2003). Self-compassion: An alternative conceptualization of a healthy attitude toward oneself. Self and Identity, 2(2), 85-101."
-            })
-        if "Concept ID: savoring" in user_prompt:
-            grounded_concepts.append({
-                "concept_id": "savoring",
-                "name": "Savoring",
-                "source": "Bryant, F. B., & Veroff, J. (2007). Savoring: A New Model of Positive Experience. Lawrence Erlbaum Associates."
-            })
-        if "Concept ID: gratitude_orientation" in user_prompt:
-            grounded_concepts.append({
-                "concept_id": "gratitude_orientation",
-                "name": "Gratitude Orientation",
-                "source": "Emmons, R. A., & McCullough, M. E. (2003). Counting blessings versus burdens. Journal of Personality and Social Psychology, 84(2), 377-389."
+                "concept_id": cid.strip(),
+                "name": name.strip(),
+                "source": src.strip(),
             })
 
-        # Fallback if no specific recognized concept, take first generic
+        # Fallback if no concept pattern matched in prompt
         if not grounded_concepts:
             grounded_concepts.append({
                 "concept_id": "cognitive_reframing",
                 "name": "Cognitive Reframing",
-                "source": "Beck, A. T. (1979). Cognitive Therapy of Depression; Clark, D. A. (2014). Cognitive Restructuring."
+                "source": "Beck, A. T. (1979). Cognitive Therapy of Depression; Clark, D. A. (2014). Cognitive Restructuring.",
             })
 
         concept_names = [c["name"] for c in grounded_concepts]

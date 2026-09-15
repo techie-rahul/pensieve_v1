@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ivory: #F7F4EE;
+  --color-charcoal: #242322;
+  --color-muted: #716D66;
+  --color-forest: #315C4A;
+  --color-sage: #8FA99A;
+  --color-cream: #E8DCC8;
+  --color-border: #DDD8CF;
+  --color-surface: #FCFAF6;
+  --color-forest-light: #3d7a60;
+  --color-forest-dark: #264a3a;
+  --font-family-serif: 'Newsreader', Georgia, serif;
+  --font-family-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+html {
+  font-family: var(--font-family-sans);
+  color: var(--color-charcoal);
+  background-color: var(--color-ivory);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-cream);
+  color: var(--color-charcoal);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+.font-serif {
+  font-family: var(--font-family-serif);
+}
+
+.font-sans {
+  font-family: var(--font-family-sans);
+}
+
+textarea:focus, input:focus {
+  outline: none;
+}
