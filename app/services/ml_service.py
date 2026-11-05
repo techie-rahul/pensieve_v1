@@ -8,6 +8,11 @@ Orchestrates real inference across Phases 1–5:
 - Phase 5: Grounded reflection generation with pre-policy checks and post-validation
 """
 
+import os
+# Ensure offline model loading from local cache without network timeouts
+os.environ.setdefault("HF_HUB_OFFLINE", "1")
+os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+
 from datetime import datetime, timezone
 import logging
 from typing import Any, Dict, List, Optional, Tuple

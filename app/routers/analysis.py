@@ -11,6 +11,7 @@ from app.models.user import User
 from app.schemas.entry import AnalysisResponse
 from app.schemas.patterns import PatternsResponse
 from app.services.ml_service import MLService, get_ml_service
+from app.services.pattern_service import get_pattern_synthesizer
 
 logger = logging.getLogger("pensieve.analysis")
 
@@ -116,6 +117,12 @@ def get_patterns(
     if time_span_days is None and report.get("safeguards"):
         time_span_days = report.get("safeguards", {}).get("timespan_days")
 
+    # Generate personalized, evidence-backed insights if report succeeded
+    personalized: dict = {}
+    if report.get("status") in ("success", "ok", "ready"):
+        synthesizer = get_pattern_synthesizer()
+        personalized = synthesizer.synthesize(entries, report)
+
     return PatternsResponse(
         status=report.get("status", "unknown"),
         entry_count=report.get("entry_count", len(entries)),
@@ -129,4 +136,10 @@ def get_patterns(
         recurring_lexical_patterns=report.get("recurring_lexical_patterns"),
         theme_emotion_associations=report.get("theme_emotion_associations"),
         message=report.get("message"),
+        overview=personalized.get("overview"),
+        recurring_topics=personalized.get("recurring_topics"),
+        emotional_trends=personalized.get("emotional_trends"),
+        recurring_thoughts=personalized.get("recurring_thoughts"),
+        changes_over_time=personalized.get("changes_over_time"),
+        personal_observations=personalized.get("personal_observations"),
     )
