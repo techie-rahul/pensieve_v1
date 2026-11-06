@@ -13,6 +13,7 @@ from dataclasses import dataclass, field, asdict
 from datetime import datetime
 import json
 import os
+import re
 from typing import Any, Dict, List, Optional, Union
 
 from ml.reflection.policy import ReflectionPolicy, PolicyCheckResult
@@ -175,7 +176,7 @@ class OpenAIClient(LLMClient):
 class MockLLMClient(LLMClient):
     """Deterministic mock provider for offline unit tests, evaluation benchmarks, and CI.
 
-    Produces strictly grounded, compliant responses or controlled violations for testing.
+    Produces strictly grounded, compliant 2-3 paragraph responses meeting Reflections 2.0 criteria.
     """
 
     def __init__(self, canned_response: Optional[Dict[str, Any]] = None) -> None:
@@ -187,19 +188,34 @@ class MockLLMClient(LLMClient):
         if self.canned_response is not None:
             return json.dumps(self.canned_response)
 
-        # Dynamically extract all retrieved concepts from user_prompt
-        import re
+        # 1. Dynamically extract all retrieved concepts from user_prompt
         grounded_concepts: List[Dict[str, str]] = []
-        concept_matches = re.findall(
-            r"Concept ID:\s*([^\n]+)\s*\nName:\s*([^\n(]+)(?:\s*\([^)]*\))?\s*\n(?:[^\n]*\n)*?Source Citation:\s*([^\n]+)",
-            user_prompt,
-        )
-        for cid, name, src in concept_matches:
-            grounded_concepts.append({
-                "concept_id": cid.strip(),
-                "name": name.strip(),
-                "source": src.strip(),
-            })
+        concept_details: List[Dict[str, str]] = []
+        concept_blocks = user_prompt.split("Concept ID:")
+        for block in concept_blocks[1:]:
+            cid_match = re.search(r"^\s*([^\n]+)", block)
+            name_match = re.search(r"Name:\s*([^\n(]+)", block)
+            src_match = re.search(r"Source Citation:\s*([^\n]+)", block)
+            lens_match = re.search(r"Reflective Lens:\s*([^\n]+)", block)
+            defn_match = re.search(r"Definition:\s*([^\n]+)", block)
+            if cid_match and name_match and src_match:
+                cid = cid_match.group(1).strip()
+                name = name_match.group(1).strip()
+                src = src_match.group(1).strip()
+                lens = lens_match.group(1).strip() if lens_match else ""
+                defn = defn_match.group(1).strip() if defn_match else ""
+                grounded_concepts.append({
+                    "concept_id": cid,
+                    "name": name,
+                    "source": src,
+                })
+                concept_details.append({
+                    "concept_id": cid,
+                    "name": name,
+                    "source": src,
+                    "lens": lens,
+                    "definition": defn,
+                })
 
         # Fallback if no concept pattern matched in prompt
         if not grounded_concepts:
@@ -208,16 +224,65 @@ class MockLLMClient(LLMClient):
                 "name": "Cognitive Reframing",
                 "source": "Beck, A. T. (1979). Cognitive Therapy of Depression; Clark, D. A. (2014). Cognitive Restructuring.",
             })
+            concept_details.append({
+                "concept_id": "cognitive_reframing",
+                "name": "Cognitive Reframing",
+                "source": "Beck, A. T. (1979). Cognitive Therapy of Depression; Clark, D. A. (2014). Cognitive Restructuring.",
+                "lens": "Helps a journaler reflect on rigid interpretations of distressing events, asking whether another reasonable interpretation exists that is grounded in evidence.",
+                "definition": "The practice of identifying automatic interpretive biases and consciously considering alternate, balanced perspectives on an event or situation.",
+            })
 
-        concept_names = [c["name"] for c in grounded_concepts]
-        reflection_body = (
-            f"Reviewing your entries over this period shows observable fluctuations across your reflections. "
-            f"These observed shifts may suggest an evolving relationship with daily demands. "
-            f"The pattern resembles principles discussed in {', '.join(concept_names)}, which offers a "
-            f"reflective lens for considering how you balance expectations against personal capacity. "
-            f"One possibility is to notice where your attention naturally gravitated during challenging days. "
-            f"What aspects of your current routine feel most within your immediate sphere of influence?"
+        # 2. Extract observations and metadata from prompt
+        obs_list: List[str] = []
+        for section in ["### 5. LONGITUDINAL TRAJECTORIES", "### 2. OBSERVED EMOTION PATTERNS", "### 3. ACTIVE THEMATIC AREAS"]:
+            if section in user_prompt:
+                sec_part = user_prompt.split(section)[1].split("###")[0]
+                lines = [l.strip().lstrip("- ").strip() for l in sec_part.splitlines() if l.strip().startswith("-")]
+                obs_list.extend(lines)
+
+        span_match = re.search(r"Timespan:\s*(\d+)\s*days", user_prompt)
+        entries_match = re.search(r"Total Entries:\s*(\d+)", user_prompt)
+        span_str = f"spanning {span_match.group(1)} days" if span_match else "over this period"
+        entry_str = f"across your {entries_match.group(1)} recent journal entries" if entries_match else "across your entries"
+
+        primary_concept = concept_details[0]
+        concept_name = primary_concept["name"]
+        raw_lens = primary_concept.get("lens") or primary_concept.get("definition") or "examining our responses to daily events"
+        # Make explanation accessible
+        accessible_lens = raw_lens.rstrip(".")
+        if accessible_lens and accessible_lens[0].isupper():
+            accessible_lens = accessible_lens[0].lower() + accessible_lens[1:]
+
+        # 3. Construct Paragraph 1: Specific, verified observation from longitudinal data
+        if obs_list:
+            first_obs = obs_list[0].rstrip(".")
+            p1 = (
+                f"Looking at your writing {entry_str} {span_str}, an observable pattern emerges: {first_obs}."
+            )
+            if len(obs_list) > 1 and len(obs_list[1]) > 5:
+                second_obs = obs_list[1].rstrip(".")
+                second_lower = second_obs[0].lower() + second_obs[1:] if len(second_obs) > 1 else second_obs
+                p1 += f" In parallel, your reflections also highlight {second_lower}."
+        else:
+            p1 = (
+                f"Across your writing {entry_str} {span_str}, an observable trajectory shows shifting patterns in your emotional tone and recurring focal themes. "
+                f"These shifts provide a tangible timeline of how your attention and energy have evolved."
+            )
+
+        # 4. Construct Paragraph 2: Accessible conceptual connection
+        p2 = (
+            f"This observed pattern resonates with the principles of {concept_name}. "
+            f"In practical terms, this concept focuses on {accessible_lens}. "
+            f"Viewed through this lens, the fluctuations in your entries may reflect an ongoing effort to balance external responsibilities with your personal capacity."
         )
+
+        # 5. Construct Paragraph 3: Thoughtful contemplation ending with exactly ONE open question
+        p3 = (
+            f"One meaningful possibility to explore is what these moments reveal about what felt most grounding versus draining for you. "
+            f"What aspects of your current daily routine feel most within your immediate sphere of influence?"
+        )
+
+        reflection_body = f"{p1}\n\n{p2}\n\n{p3}"
 
         return json.dumps({
             "reflection": reflection_body,
@@ -373,7 +438,18 @@ class ReflectionGenerator:
                 "disclaimer": None,
             }
 
-        # 8. Success: Return fully verified reflection
+        # Extract top 1-3 actual Phase 3 observations for audit / input_summary
+        top_observations: List[str] = []
+        if reflection_input.temporal_patterns:
+            top_observations.extend([str(p) for p in reflection_input.temporal_patterns[:3]])
+        elif reflection_input.emotion_patterns:
+            top_observations.extend([str(p) for p in reflection_input.emotion_patterns[:2]])
+            if reflection_input.theme_patterns:
+                top_observations.append(str(reflection_input.theme_patterns[0]))
+        elif reflection_input.theme_patterns:
+            top_observations.extend([str(p) for p in reflection_input.theme_patterns[:3]])
+
+        # 8. Success: Return fully verified reflection with rich audit metadata
         return {
             "status": "success",
             "reflection": parsed.get("reflection", "").strip(),
@@ -385,6 +461,7 @@ class ReflectionGenerator:
                 "validated": True,
                 "entry_count": entry_count,
                 "span_days": span_days,
+                "observations": top_observations[:3],
                 "concept_ids_used": [c.get("concept_id") for c in parsed.get("grounded_concepts", [])],
             },
         }
