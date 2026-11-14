@@ -1,5 +1,6 @@
 """Reflections API endpoints."""
 
+from datetime import datetime, timezone
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -29,6 +30,22 @@ def suggest_reflection(
     ml_service: MLService = Depends(get_ml_service),
 ) -> ReflectionSuggestResponse:
     """Generate a reflective response from longitudinal signals and retrieved concepts."""
+    # 0. Check for recent reflection to prevent duplicate generation requests (rapid double clicks, retries)
+    latest_refl = (
+        db.query(Reflection)
+        .filter(Reflection.user_id == current_user.id)
+        .order_by(Reflection.created_at.desc(), Reflection.id.desc())
+        .first()
+    )
+    if latest_refl and latest_refl.created_at:
+        now = datetime.now(timezone.utc)
+        refl_time = latest_refl.created_at if latest_refl.created_at.tzinfo else latest_refl.created_at.replace(tzinfo=timezone.utc)
+        if (now - refl_time).total_seconds() < 15:
+            return ReflectionSuggestResponse(
+                status="success",
+                reflection=latest_refl,
+            )
+
     # 1. Fetch user's non-draft entries
     entries = (
         db.query(JournalEntry)
@@ -41,7 +58,7 @@ def suggest_reflection(
     past_reflections = (
         db.query(Reflection.created_at)
         .filter(Reflection.user_id == current_user.id)
-        .order_by(Reflection.created_at.desc())
+        .order_by(Reflection.created_at.desc(), Reflection.id.desc())
         .all()
     )
     past_timestamps = [r[0].isoformat() for r in past_reflections if r[0]]
@@ -53,6 +70,22 @@ def suggest_reflection(
     )
 
     if gen_result["status"] == "success":
+        # Double check before persisting to guard against concurrent requests
+        concurrent_check = (
+            db.query(Reflection)
+            .filter(Reflection.user_id == current_user.id)
+            .order_by(Reflection.created_at.desc(), Reflection.id.desc())
+            .first()
+        )
+        if concurrent_check and concurrent_check.created_at:
+            now = datetime.now(timezone.utc)
+            refl_time = concurrent_check.created_at if concurrent_check.created_at.tzinfo else concurrent_check.created_at.replace(tzinfo=timezone.utc)
+            if (now - refl_time).total_seconds() < 15:
+                return ReflectionSuggestResponse(
+                    status="success",
+                    reflection=concurrent_check,
+                )
+
         # Persist reflection
         reflection = Reflection(
             user_id=current_user.id,
@@ -93,10 +126,17 @@ def list_reflections(
     reflections = (
         db.query(Reflection)
         .filter(Reflection.user_id == current_user.id)
-        .order_by(Reflection.created_at.desc())
+        .order_by(Reflection.created_at.desc(), Reflection.id.desc())
         .all()
     )
-    return reflections
+    # Deduplicate strictly by stable ID
+    seen_ids = set()
+    unique_reflections = []
+    for r in reflections:
+        if r.id not in seen_ids:
+            seen_ids.add(r.id)
+            unique_reflections.append(r)
+    return unique_reflections
 
 
 @router.get(
