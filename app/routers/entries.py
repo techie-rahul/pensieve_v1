@@ -188,7 +188,9 @@ def autosave_entry(
         entry.content = draft_in.content
         entry.mood = draft_in.mood
         entry.tags = draft_in.tags or []
-        entry.is_draft = True
+        # If the entry was already saved as non-draft, preserve its published status
+        if entry.is_draft:
+            entry.is_draft = True
     else:
         entry = JournalEntry(
             user_id=current_user.id,

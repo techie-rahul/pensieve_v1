@@ -1,6 +1,6 @@
 """Pydantic schema for longitudinal patterns endpoint."""
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel
 
 
@@ -9,7 +9,7 @@ class PatternsResponse(BaseModel):
 
     status: str
     entry_count: int
-    time_span_days: Optional[int] = None
+    time_span_days: Optional[Union[float, int]] = None
     history_window_type: Optional[str] = None
     num_windows: Optional[int] = None
     safeguards: Optional[Dict[str, Any]] = None
