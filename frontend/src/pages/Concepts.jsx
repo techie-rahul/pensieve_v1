@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { conceptsAPI } from '../api/client';
-import { Library, Search, ChevronDown, ChevronUp, BookOpen } from 'lucide-react';
+import { Library, Search, ChevronDown, ChevronUp } from 'lucide-react';
 import EmptyState from '../components/common/EmptyState';
 
 export default function Concepts() {

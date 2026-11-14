@@ -25,68 +25,112 @@ Pensieve is a privacy-first reflective journaling platform that analyzes persona
 └────────────────────────┘                                   └────────────────────────┘
 ```
 
-### ML Pipeline Integration (Phases 1–5)
+### ML Pipeline Integration (Phases 1–5 & Enhancements)
 - **Phase 1: Emotion Detection** — Fine-tuned RoBERTa on Google GoEmotions (28 emotion classes).
-- **Phase 2: Semantic Theme Discovery** — Sentence-BERT (`all-MiniLM-L6-v2`) + UMAP + HDBSCAN.
+- **Phase 2: Semantic Theme Discovery** — Sentence-BERT (`all-MiniLM-L6-v2`) + UMAP + HDBSCAN topic clustering.
 - **Phase 3: Linguistic & Longitudinal Analysis** — spaCy POS and syntactic parsing, pronoun ratios, temporal windowing, trend analysis.
-- **Phase 4: Reflective Knowledge Retrieval** — FAISS vector index over the curated 20-concept DEVELOPMENT/TEST knowledge base.
+- **Phase 4: Reflective Knowledge Retrieval** — FAISS vector index over the curated 20-concept developmental knowledge base.
 - **Phase 5: Grounded Reflection Generation** — Longitudinal synthesis with policy pre-checks, provider isolation (`OpenAIClient` / `MockLLMClient`), confidence capping ($\le 0.80$), and non-diagnostic safety validation.
+- **Personalized Longitudinal Patterns** — Multidimensional pattern extraction, circular shifts, cognitive distortion clustering, and evidence-grounded theme tracking.
+- **Reflections 2.0** — Personalized emotional arc synthesis, cognitive distortion reframing, philosophical anchors, and conversational reflection prompts.
 
 ---
 
 ## Getting Started
 
 ### Prerequisites
-- Python 3.10+ (tested and verified on Python 3.13)
-- PyTorch 2.0+
+- **Python**: 3.10+ (tested and verified on Python 3.13)
+- **Node.js**: 18+ (tested and verified on Node 24)
+- **PyTorch**: 2.0+
 
-### 1. Installation
-Clone the repository and install all dependencies:
+---
 
-```bash
-# Clone repository
-git clone https://github.com/techie-rahul/pensieve-v1.git
-cd pensieve-v1
+### 1. Backend Setup
 
-# Create and activate virtual environment (optional but recommended)
-python -m venv venv
-# On Windows:
-venv\Scripts\activate
-# On Linux/macOS:
-source venv/bin/activate
+1. **Clone repository:**
+   ```bash
+   git clone https://github.com/techie-rahul/pensieve_v1.git
+   cd pensieve_v1
+   ```
 
-# Install dependencies
-pip install -r ml/requirements.txt
-```
+2. **Create and activate a virtual environment:**
+   ```bash
+   # On Windows:
+   python -m venv venv
+   .\venv\Scripts\activate
 
-### 2. Environment Configuration
-Copy the sample environment file and adjust if necessary:
+   # On Linux/macOS:
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
 
-```bash
-cp .env.example .env
-```
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Available configuration options in `.env`:
+4. **Configure environment:**
+   ```bash
+   cp .env.example .env
+   ```
 
-| Variable | Default | Description |
-| :--- | :--- | :--- |
-| `DATABASE_URL` | `sqlite:///./pensieve.db` | SQLAlchemy database connection string |
-| `SECRET_KEY` | `development-secret-key-change-in-production` | Secret key for signing JWT tokens |
-| `ACCESS_TOKEN_EXPIRE_MINUTES` | `1440` | JWT expiration duration in minutes (24h) |
-| `CORS_ORIGINS` | `http://localhost:5173,http://localhost:3000` | Allowed origins for React frontend |
-| `OPENAI_API_KEY` | *(optional)* | OpenAI API key for live LLM reflections (defaults to mock generator if unset) |
+   Available configuration options in `.env`:
 
-### 3. Run the Backend Server
-Launch the FastAPI application with Uvicorn:
+   | Variable | Default | Description |
+   | :--- | :--- | :--- |
+   | `DATABASE_URL` | `sqlite:///./pensieve.db` | SQLAlchemy database connection string |
+   | `SECRET_KEY` | `development-secret-key-change-in-production` | Secret key for signing JWT tokens |
+   | `ACCESS_TOKEN_EXPIRE_MINUTES` | `1440` | JWT expiration duration in minutes (24h) |
+   | `CORS_ORIGINS` | `http://localhost:5173,http://localhost:3000` | Allowed origins for React frontend |
+   | `OPENAI_API_KEY` | *(optional)* | OpenAI API key for live LLM reflections (defaults to mock generator if unset) |
 
-```bash
-uvicorn app.main:app --reload --port 8000
-```
+5. **(Optional) Seed Demo Dataset:**
+   Seed 22 curated historical journal entries across a 30-day longitudinal progression:
+   ```bash
+   python scripts/seed_demo.py
+   # Or with a custom user name:
+   python scripts/seed_demo.py --name "Rahul"
+   ```
+   *Default Demo Credentials:* `demo@pensieve.app` / `DemoUser123!`
 
-The interactive API documentation is available at:
-- **Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs)
-- **ReDoc**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
-- **Health Check**: [http://localhost:8000/api/health](http://localhost:8000/api/health)
+6. **Start the FastAPI Backend:**
+   ```bash
+   uvicorn app.main:app --reload --port 8000
+   ```
+   The interactive API documentation is available at:
+   - **Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs)
+   - **ReDoc**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
+   - **Health Check**: [http://localhost:8000/api/health](http://localhost:8000/api/health)
+
+---
+
+### 2. Frontend Setup
+
+1. **Navigate to the frontend directory:**
+   ```bash
+   cd frontend
+   ```
+
+2. **Install frontend dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start the Vite development server:**
+   ```bash
+   npm run dev
+   ```
+   The application will be accessible at [http://localhost:5173](http://localhost:5173).
+
+4. **Build for production:**
+   ```bash
+   npm run build
+   ```
+
+5. **Lint:**
+   ```bash
+   npm run lint
+   ```
 
 ---
 
@@ -120,16 +164,17 @@ The interactive API documentation is available at:
 
 ---
 
-## Running Tests
+## Running Verification & Tests
 
-Run the complete test suite:
-
+### Backend Test Suite
+Run all unit and integration tests across auth, entries, analysis, concepts, personalized patterns, and reflections:
 ```bash
-pytest tests/ -v
+python -m pytest tests/ -v
 ```
 
-Run end-to-end user lifecycle verification:
-
+### Frontend Linting & Production Build
 ```bash
-python .gemini/antigravity/brain/1bd87209-1a75-4d60-bea6-af74a99f8428/scratch/verify_backend_e2e.py
+cd frontend
+npm run lint
+npm run build
 ```

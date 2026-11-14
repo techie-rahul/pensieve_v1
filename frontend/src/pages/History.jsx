@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { entriesAPI } from '../api/client';
-import { Search, BookOpen, FileText } from 'lucide-react';
+import { Search, BookOpen } from 'lucide-react';
 import EmptyState from '../components/common/EmptyState';
 
 function formatDate(dateStr) {
